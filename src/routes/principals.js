@@ -1,4 +1,4 @@
-const { principals } = require("../controllers/principals")
+const { principals, searchPrincipal } = require("../controllers/principals")
 
 module.exports = (app) => {
 
@@ -6,4 +6,9 @@ module.exports = (app) => {
         "/api/principals",
         principals
     );
+    app.get(
+        "/api/search-principal",
+        searchPrincipal
+    )
 };
+
