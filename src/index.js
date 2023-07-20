@@ -36,7 +36,6 @@ app.get('/', (req, res) => res.send('Hello my World'));
 
 require('./routes/user.js')(app);
 require("./routes/principals.js")(app);
-require("./routes/principalsDependants.js")(app);
 
 
 //create a server

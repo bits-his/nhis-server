@@ -17,75 +17,62 @@ const principals = (req, res) => {
     });
 };
 
-const enrolee = (req, res) => {
-  // const {  } = req.body;
-  const {
-    nhia = null,
-    program_type = null,
-    surname = null,
-    firstname = null,
-    middlename = null,
-    dob = null,
-    gender = null,
-    entity__tpye = null,
-    hmo_code = null,
-    hmo = null,
-    email = null,
-    martial_status = null,
-    year_of_p = null,
-    callup_no = null,
-    state_code = null,
-    services_year = null,
-    services_batch = null,
-    stream = null,
-    state_of_origin = null,
-    state_of_p = null,
-    start_date = null,
-    end_date = null,
-    zone = null,
-    zone_id = null,
-    state_of_c = (nul = null),
-  } = req.body;
-  const { query_type = "insert" } = req.query;
+const selectByID = (req, res) => {
+  const { id } = req.query;
   db.sequelize
-    .query(
-      `call enrolee(:nhia,:query_type,:program_type,:surname,:firstname,:middlename,:dob,:gender,:entity__tpye,:hmo_code,:hmo,:email,:martial_status,:year_of_p,:callup_no,:state_code,:services_year,:services_batch,:stream,:state_of_origin,:state_of_p,:start_date,:end_date,:zone,:zone_id,:state_of_c)`,
-      {
-        replacements: {
-          nhia,
-          query_type,
-          program_type,
-          surname,
-          firstname,
-          middlename,
-          dob,
-          gender,
-          entity__tpye,
-          hmo_code,
-          hmo,
-          email,
-          martial_status,
-          year_of_p,
-          callup_no,
-          state_code,
-          services_year,
-          services_batch,
-          stream,
-          state_of_origin,
-          state_of_p,
-          start_date,
-          end_date,
-          zone,
-          zone_id,
-          state_of_c,
-        },
-      }
-    )
+    .query("CALL select_enrollee(:id)", {
+      replacements: { id },
+    })
     .then((results) => res.json({ success: true, results }))
     .catch((err) => {
       console.log(err);
       res.status(500).json({ success: false });
     });
+};
+
+const enrolee = (req, res) => {
+  const { query_type = "insert" } = req.query;
+  req.body.forEach((item) => {
+    db.sequelize
+      .query(
+        `call enrolee(:nhia,:query_type,:program_type,:surname,:firstname,:middlename,:dob,:gender,:entity__tpye,:hmo_code,:hmo,:email,:martial_status,:year_of_p,:callup_no,:state_code,:services_year,:services_batch,:stream,:state_of_origin,:state_of_p,:start_date,:end_date,:zone,:zone_id,:state_of_c)`,
+        {
+          replacements: {
+            nhia: item.nhia ? item.nhia : "",
+            query_type: query_type,
+            program_type: item.program_type ? item.program_type : "",
+            surname: item.surname ? item.surname : "",
+            firstname: item.firstname ? item.firstname : "",
+            middlename: item.middlename ? item.middlename : "",
+            dob: item.dob ? item.dob : "",
+            gender: item.gender ? item.gender : "",
+            entity__tpye: item.entity__tpye ? item.entity__tpye : "",
+            hmo_code: item.hmo_code ? item.hmo_code : "",
+            hmo: item.hmo ? item.hmo : "",
+            email: item.email ? item.email : "",
+            martial_status: item.martial_status ? item.martial_status : "",
+            year_of_p: item.year_of_p ? item.year_of_p : "",
+            callup_no: item.callup_no ? item.callup_no : "",
+            state_code: item.state_code ? item.state_code : "",
+            services_year: item.services_year ? item.services_year : "",
+            services_batch: item.services_batch ? item.services_batch : "",
+            stream: item.stream ? item.stream : "",
+            state_of_origin: item.state_of_origin ? item.state_of_origin : "",
+            state_of_p: item.state_of_p ? item.state_of_p : "",
+            start_date: item.start_date ? item.start_date : "",
+            end_date: item.end_date ? item.end_date : "",
+            zone: item.zone ? item.zone : "",
+            zone_id: item.zone_id ? item.zone_id : "",
+            state_of_c: item.state_of_c ? item.state_of_c : "",
+          },
+        }
+      )
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({ success: false, err });
+      });
+  });
+  res.json({ success: true });
 };
 
 const insertExcel = (req, res) => {
@@ -115,4 +102,4 @@ const insertExcel = (req, res) => {
     });
 };
 
-export { principals, enrolee, insertExcel };
+export { principals, enrolee, insertExcel, selectByID };
